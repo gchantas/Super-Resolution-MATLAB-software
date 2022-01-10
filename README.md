@@ -14,6 +14,8 @@ pathLR: the path+name of the input file of the low-res image
 
 decFactor: the scaling factor which can be either 2 or 4. For decFactor=3 cases,there is a special function for this case (see below), so it is not passed as a parameter.
 
+**The images are not included.** Instead, you must download them from their respective repositories. See the paper to find the links.
+You could also find them via a Google search. The datasets are "Set3", "Set14" and "Urban100".
 
 **1.** NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor)
 
