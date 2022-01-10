@@ -15,19 +15,19 @@ pathLR: the path+name of the input file of the low-res image
 decFactor: the scaling factor which can be either 2 or 4. For decFactor=3 cases,there is a special function for this case (see below), so it is not passed as a parameter.
 
 
-**1. **NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor)
+**1. ** NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor)
 
 VBPS x2 or x4: This is the function implementing the standard Variational Bayes Super Resolution. decFactor is actually the scaling factor, which, here, can be **2 or 4**. 
 
-**2. **NonLocalPatchesFINDZ_YCbCr_X3_22_7_2019(pathHR,pathLR,imNumber)
+**2. ** NonLocalPatchesFINDZ_YCbCr_X3_22_7_2019(pathHR,pathLR,imNumber)
 
 VBPS x3: This is the function implementing the standard Variational Bayes Super Resolution for decFactor=3. 
 
-**3. **SRviaDenoisingYCbCr22_1_2020(pathHR,pathSR,pathLR,decFactor)
+**3. ** SRviaDenoisingYCbCr22_1_2020(pathHR,pathSR,pathLR,decFactor)
 
 t-VBPNLM x2 or x4: The function implementing the t-VBPNLM algorithm
 
-**4. **SRviaDenoisingYCbCrGauss24_1_2020(pathHR,pathLR,decFactor)
+**4. ** SRviaDenoisingYCbCrGauss24_1_2020(pathHR,pathLR,decFactor)
 
 VBPNLM x2 or x4: The function implementing the VBPNLM algorithm
 
