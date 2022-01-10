@@ -35,6 +35,6 @@ VBPNLM x2 or x4: The function implementing the VBPNLM algorithm
 
 t-VBPNLM x3: The function implementing the t-VBPNLM (decFactor=3 in the function).
 
-**6.**SRviaDenoisingYCbCx3Gauss_26_1_2020(pathHR,pathLR);
+**6.** SRviaDenoisingYCbCx3Gauss_26_1_2020(pathHR,pathLR);
 
 VBPNLM x3: The function implementing the t-VBPNLM (decFactor=3 in the function).
