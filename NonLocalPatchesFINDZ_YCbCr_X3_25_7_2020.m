@@ -1,4 +1,4 @@
-function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr_X3_22_7_2019(pathHR,pathSR,pathLR,imNumber)
+function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr_X3_22_7_2019(pathHR,pathSR,pathLR)
 
 
 %Changes: for 3x decFactors
