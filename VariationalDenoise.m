@@ -12,7 +12,7 @@ nx1=(1:Nx)+maxX;
 ny1=(1:Ny)+maxY;
 %notnx1=[0:maxX-1, Nx-maxX:Nx-1];
 %notny1=[0:maxY-1, Ny-maxY:Ny-1];
-Ball=gpuArray(zeros(Nx+2*maxX,Ny+2*maxY));
+Ball=gpuArray2(zeros(Nx+2*maxX,Ny+2*maxY));
 
 
 
@@ -27,7 +27,7 @@ for k=1:expNum
 end
 
 
-z1=gpuArray(alpha*y);
+z1=gpuArray2(alpha*y);
 
 
 for k=1:expNum

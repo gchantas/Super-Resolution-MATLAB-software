@@ -1,4 +1,4 @@
-function [PSNR, ISNR, SSIMres]=SRviaDenoisingYCbCrPNLM_12_2_2020(pathHR,pathLR,decFactor)
+function [PSNR, ISNR, SSIMres]=SRviaDenoisingYCbCrPNLM_RandomD_11_6_2020(pathHR,pathLR,decFactor)
 %clear all;
 %myinput1=1;
 %imNumber=13;

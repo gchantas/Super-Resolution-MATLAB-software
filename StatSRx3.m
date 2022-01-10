@@ -142,7 +142,7 @@ for iter=1:55
 end
 
 
-alpha=alpha/2;
+alpha=alpha/4;
 
 Ia=makeDiagMatCells(  alpha*ssigma*Qp,Nx,Ny,decFactor*2,0);%%diagonal identity matrix (no blocks)
 C2=addBlockMat(C,Ia,decFactor*2);

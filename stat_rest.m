@@ -1,6 +1,6 @@
-function [alpha,ssigma,fhat,Cfg] = stat_rest(alpha,ssigma,g,Q,H1,N)
+function [alpha,ssigma,fhat,Cfg] = stat_rest(alpha,ssigma,g,Q,H1,Nx,Ny)
 
-NN=N*N;
+NN=Nx*Ny;
 G=fft2(g);
 Hf1 = abs(H1).^2;
 Qf = abs(Q).^2;
