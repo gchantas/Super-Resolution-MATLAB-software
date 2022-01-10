@@ -13,8 +13,8 @@ for imNumber=1:1
     tstart = tic;
     %pathHR = sprintf('/home/gchantas/Documents/SR/Urban100x1_%d/img_%03d.png',decFactor,imNumber);
     %pathLR= sprintf('/home/gchantas/Documents/SR/Urban100x%d/img_%03d.png',decFactor,imNumber);
-    pathHR = sprintf('D:\\ImagingData\\bee_HR_1.png');
-    pathLR= sprintf('D:\\ImagingData\\bee_LR_1.png');
+    pathHR = sprintf('/home/gchantas/Downloads/DRLN-master/NDVI_field_1.png');
+    pathLR= sprintf('/home/gchantas/Downloads/DRLN-master/NDVI_field_1_x2.png');
 
     %pathHR = sprintf('/home/gchantas/Downloads/Set5x1_%d/image_%03d.png',decFactor,imNumber);
     %pathLR= sprintf('/home/gchantas/Downloads/Set5x%d/image_%03d.png',decFactor,imNumber);
@@ -23,7 +23,7 @@ for imNumber=1:1
     %pathLR = sprintf('/home/gchantas/Documents/PIRM2018/Test/4x_downsampledYCbCr/%d.png',imNumber);
 
     %[l1 l2 l3]=NonLocalPatchesFINDZ_YCbCr_X3_22_7_2019(pathHR,pathLR,imNumber);
-    [l1 l2 l3]=NonLocalPatchesFINDZ_YCbCr18_6_2020(pathHR,pathLR,imNumber,decFactor);
+    [l1 l2 l3]=NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor);
     %[l1 l2 l3]=SRviaDenoisingYCbCr14_1_2020(pathHR,pathLR,decFactor);
     %[l1 l2 l3]=SRviaDenoisingYCbCrGauss24_1_2020(pathHR,pathLR,decFactor);
     %[l1 l2 l3]=SRviaDenoisingYCbCx3_r20_1_2020(pathHR,pathLR,decFactor);

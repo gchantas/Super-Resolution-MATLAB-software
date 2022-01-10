@@ -6,7 +6,7 @@
 
 clear all;
 myinput1=1;
-imNumber=13;
+imNumber=1;
 %randn('seed',0);
 
 
@@ -15,11 +15,11 @@ decFactor=2;
 boundary=decFactor;
 %pathHR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_train_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
 %pathLR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_valid_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
-%pathHR = sprintf('/home/gchantas/Documents/SR/Urban100x1_%d/img_%03d.png',decFactor,imNumber);
-%pathLR= sprintf('/home/gchantas/Documents/SR/Urban100x%d/img_%03d.png',decFactor,imNumber);
+pathHR = sprintf('/home/gchantas/Documents/SR/Urban100x1_%d/img_%03d.png',decFactor,imNumber);
+pathLR= sprintf('/home/gchantas/Documents/SR/Urban100x%d/img_%03d.png',decFactor,imNumber);
 
-pathHR = sprintf('/home/gchantas/Downloads/Set14x1_%d/image_%03d.png',decFactor,imNumber);
-pathLR= sprintf('/home/gchantas/Downloads/Set14x%d/image_%03d.png',decFactor,imNumber);
+%pathHR = sprintf('/home/gchantas/Downloads/Set14x1_%d/image_%03d.png',decFactor,imNumber);
+%pathLR= sprintf('/home/gchantas/Downloads/Set14x%d/image_%03d.png',decFactor,imNumber);
 
 %pathHR = sprintf('/home/gchantas/Downloads/Set5x1_%d/image_%03d.png',decFactor,imNumber);
 %pathLR= sprintf('/home/gchantas/Downloads/Set5x%d/image_%03d.png',decFactor,imNumber);
@@ -216,7 +216,7 @@ optcoord(Nx/2+1,Ny/2+1)=1;
 
             for exper=1:expNum
                 nu{exper}=7.0001;
-                c2{exper}=120*alpha;
+                c2{exper}=5200*alpha;
                 Z{exper}=ones(Nx,Ny)/expNum;
                 A{exper}=zeros(Nx,Ny)/expNum;
                 pof{exper}=1/expNum;
@@ -326,7 +326,7 @@ tic;[fcorrsorted,I]=sort(fcorr(:),'descend');toc
 expNum=1;
 indx=0;
 
-for j1=1:1:60
+for j1=1:1:120
 
     indx=j1;
 
@@ -541,7 +541,7 @@ for iter=1:10
 
     % tic;   [ x, istop, itn, Anorm, Acond, rnorm, xnorm, D_r ]=cgLanczos( @Amat_fast,x, b(:), iw, rw, 0, 0, 1000, 10^(-10)); toc
      %tic;  x=PCconjGradients(x(:),@Amat_ultrafast,b(:),iw,rw,1./Qp(:), 1000,10^(-13));toc
-     tic;  x=conjGradients(x(:),@Amat_Q,b(:),iw,rw, 1000,10^(-8));toc
+     tic;  x=conjGradients(x(:),@Amat_Q,b(:),iw,rw, 1000,10^(-9));toc
 
     x  =   reshape(x,  Nx, Ny );
 

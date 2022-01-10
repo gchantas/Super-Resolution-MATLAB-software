@@ -24,9 +24,9 @@ for iter=1:maxiter
        %if rnorm<rtol*rnormStart
        if mod(iter,20)==0
             if a * norm(p,'fro')^2/norm(x,'fro')^2   <     rtol
-                disp 'Exit due to convergence: rnorm is lesser than rtol'
-                disp 'Iterations made:  '
-                iter
+              %  disp 'Exit due to convergence: rnorm is lesser than rtol'
+              %  disp 'Iterations made:  '
+              %  iter
                 return;
             end
        end

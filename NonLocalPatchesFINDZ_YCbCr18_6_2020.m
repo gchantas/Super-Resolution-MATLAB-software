@@ -301,7 +301,7 @@ tic;[fcorrsorted,I]=sort(fcorr(:),'descend');toc
 expNum=1;
 indx=0;
 
-for j1=1:1:280
+for j1=1:1:180
 
     indx=j1;
 
@@ -597,7 +597,7 @@ end
 
 end
 
-imwrite(gather(x),sprintf('%s%s%d.bmp',pathSR,'bee_SR',imNumber));
+%imwrite(gather(x),sprintf('%s/%s%d.bmp',pathSR,'bee_SR',imNumber));
  
 %ISNR=10*log10(  ( norm( f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)  -   g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2   )/(  norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-x(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2))
 

@@ -2,7 +2,7 @@ function y1 = EasySRAmat(x, iw, rw )
 alpha=iw{1};
 P1=size(rw');
 P=P1(1);
-N1=size(rw{2});
+N1=size(iw{3});
 Nx=N1(1);
 Ny=N1(2);
 decFactor=iw{2};
@@ -27,11 +27,14 @@ y=myimresizeTranspose(y_,Nx,Ny,H1,decFactor,extras);
 
 y=y+alpha*x;
     %temp=rw{k+1}.*real(  ifft2( rw{k}.*fft2(x)  ));
-% temp=rw{k+1}.* (x-circshift(x,rw{k}));
-   % y = y+(temp - imresize( imresize( circshift(temp,-rw{k}), 2), 0.5 ));
 
- %   y = y+(temp - circshift(temp,-rw{k}) );
-    %y=y+real(ifft2( conj(rw{k}).*fft2(temp) ));
+    % temp=rw{k+1}.* (x-circshift(x,rw{k}));
+   
+    % y = y+(temp - imresize( imresize( circshift(temp,-rw{k}), 2), 0.5 ));
+
+ 
+    % y = y+(temp - circshift(temp,-rw{k}) );
+    % y = y+real(ifft2( conj(rw{k}).*fft2(temp) ));
 
 
 y1=y(:);

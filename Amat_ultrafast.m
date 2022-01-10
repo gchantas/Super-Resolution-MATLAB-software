@@ -17,7 +17,7 @@ Nx=iw{5};
 Ny=iw{6};
 maxX=iw{7};
 maxY=iw{8};
-HDDH=iw{9};
+%HDDH=iw{9};
 %ZeroIndX=iw{10};
 %ZeroIndY=iw{10};
 

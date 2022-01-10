@@ -6,7 +6,7 @@
 
 clear all;
 myinput1=1;
-imNumber=13;
+imNumber=2;
 %randn('seed',0);
 
 
@@ -307,7 +307,7 @@ tic;[fcorrsorted,I]=sort(fcorr(:),'descend');toc
 expNum=1;
 indx=0;
 
-for j1=1:1:280
+for j1=1:1:80
 
     indx=j1;
 

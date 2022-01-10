@@ -1,24 +1,20 @@
-%function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr2151_2019(pathHR,pathLR,imNumber,decFactor)
-
+function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr2151_2019(pathHR,pathLR,imNumber,decFactor)
 
 %Changes: for all decFactors!!!!!!!!!!!!! done
 
-
-clear all;
-myinput1=1;
-imNumber=13;
+%clear all;
+%myinput1=1;
+%imNumber=1;
 %randn('seed',0);
 
-
-
-decFactor=2;
+%decFactor=4;
 %pathHR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_train_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
 %pathLR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_valid_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
 %pathHR = sprintf('/home/gchantas/Documents/SR/Urban100x1_%d/img_%03d.png',decFactor,imNumber);
 %pathLR= sprintf('/home/gchantas/Documents/SR/Urban100x%d/img_%03d.png',decFactor,imNumber);
 
-pathHR = sprintf('../Set14x1_%d/image_%03d.png',decFactor,imNumber);
-pathLR= sprintf('../Set14x%d/image_%03d.png',decFactor,imNumber);
+%pathHR = sprintf('/home/gchantas/Downloads/Set14x1_%d/image_%03d.png',decFactor,imNumber);
+%pathLR= sprintf('/home/gchantas/Downloads/Set14x%d/image_%03d.png',decFactor,imNumber);
 
 %pathHR = sprintf('/home/gchantas/Downloads/Set5x1_%d/image_%03d.png',decFactor,imNumber);
 %pathLR= sprintf('/home/gchantas/Downloads/Set5x%d/image_%03d.png',decFactor,imNumber);
@@ -128,11 +124,17 @@ Qp=abs(fft2(Q)).^2;
 
 
 alpha=1;
-ssigma=10^(-7);
+
 
 x=g2;
 
+if decFactor==2
+    ssigma=10^(-7);
 [x,alpha,ssigma,Inv,HDDH]=StatSR(x,g,1,ssigma,Nx,Ny,decFactor,f);
+elseif decFactor==4
+    ssigma=10^(-6);
+    [x,alpha,ssigma,Inv,HDDH]=StatSRx4(x,g,1,ssigma,Nx,Ny,decFactor,f);
+end
 alpha
 
 %x(30:Nx-30,30:Ny-30)=(xprev(30:Nx-30,30:Ny-30));
@@ -169,39 +171,45 @@ Nx=Nx+2*extras;
 Ny=Ny+2*extras;
 
 hh1=zeros(Nx,Ny);
-sigall=1/decFactor;
- 
 
+
+sigall=1/decFactor;
 
 %Bicubic separable filter
 
     sigblurx=sigall;
     sigblury=sigall;
 
-    for i=round(Nx/2)-15:round(Nx/2)+14
-
-        for j=round(Ny/2)-15:round(Ny/2)+14
-          %  hh1(i,j)=sigblurx*cubic(-(i-Nx/2+1/4)*sigblurx-1/16)*sigblury*cubic(-(j-Ny/2+1/4)*sigblury-1/16);
-           %For decFactor=2
-          hh1(i,j)=sigblurx*cubic(-(i-Nx/2-1+0.5)*sigblurx)*sigblury*cubic(-(j-Ny/2-1+0.5)*sigblury);
+    for i=round(Nx/2)-12:round(Nx/2)+13
+        
+        for j=round(Ny/2)-12:round(Ny/2)+13
+            if decFactor==4
+                hh1(i,j)=sigblurx*cubic(-(i-Nx/2+1/4)*sigblurx-1/16)*sigblury*cubic(-(j-Ny/2+1/4)*sigblury-1/16);
+                %For decFactor=2
+                
+            elseif decFactor==2
+                hh1(i,j)=sigblurx*cubic(-(i-Nx/2-1+0.5)*sigblurx)*sigblury*cubic(-(j-Ny/2-1+0.5)*sigblury);
+            end
+            
         end
-
     end
-
-hh1=hh1  /   sum(sum(  hh1   ));
+    
+hh1=hh1/sum(sum(  hh1   ));
 hh1=fftshift(hh1);
 Hcubic=fft2(hh1);
 
-
 Nx=Nx-2*extras;
 Ny=Ny-2*extras;
-
+    
 
 %Qp=zeros(N);
    
 %ISNR_Bayes=10*log10( norm(f(20:Nx-20,20:Ny-20)  - (g2(20:Nx-20,20:Ny-20)),'fro')^2/norm( f(20:Nx-20,20:Ny-20) - x1(20:Nx-20,20:Ny-20),'fro')^2  )
 
 norm(myimresize(f,Nx,Ny,Hcubic,decFactor,extras )-imresize(f,1/decFactor),'fro')^2/(Nx*Ny)
+
+
+
 
 expNum=400;
 coord=zeros(expNum,2);
@@ -213,7 +221,7 @@ optcoord(Nx/2+1,Ny/2+1)=1;
 
             for exper=1:expNum
                 nu{exper}=7.0001;
-                c2{exper}=4000*alpha;
+                c2{exper}=2000*alpha;
                 Z{exper}=ones(Nx,Ny)/expNum;
                 A{exper}=zeros(Nx,Ny)/expNum;
                 pof{exper}=1/expNum;
@@ -298,7 +306,7 @@ tic;[fcorrsorted,I]=sort(fcorr(:),'descend');toc
 expNum=1;
 indx=0;
 
-for j1=1:1:50
+for j1=1:1:280
 
     indx=j1;
 
@@ -334,7 +342,17 @@ expNum=expNum-1
 %                 end
 %              end
  %Gaussian Blurring Function
-          
+            sigblurx=sigall*0.4;
+            sigblury=sigall*0.4;
+             for i=1:Nx
+                for j=1:Ny
+                    hh(i,j)=exp(-(abs(i-floor(Nx/2)-1).^3.0)*sigblurx).*exp(-(abs(j-floor(Ny/2)-1).^3.0)*sigblury);
+                end
+             end
+
+            S{1}=1;
+            hh=S{1}*(hh)/sum(sum(hh));
+            HQ{1}=fft2(fftshift(hh));
 
             %x=g2(1:Nx,1:Ny);
             
@@ -401,14 +419,16 @@ expNum=expNum-1
 % 
 % for exper=1:expNum, if nu{exper}/(c2{exper}.*(nu{exper}-2))<0.00005,  coord2(indx,:)=coord(exper,:); nu{indx}=nu{exper};c2{indx}=c2{exper}; indx=indx+1;end; end;
 % coord=coord2;
+% 
+% 
+% 
 % expNum=indx-1;
-
-%return;
+ 
+ %return;
 clear E;
 
 
         for exper=1:expNum
-
             %nu=0.00001;
             %c2{exper}=1.01;
             rw{2*exper-1}(1)=coord(exper,1);
@@ -418,39 +438,24 @@ clear E;
             %pof{exper}=1/expNum;
             Qp=zeros(Nx,Ny);
             PW{exper}=ones(Nx,Ny)/expNum;
-            hh=zeros(Nx,Ny);
-            sigblurx=0.6;%/sqrt( (( mod((coord(exper,1)+Nx/2),Nx)-Nx/2))^2  +  ((  mod((coord(exper,2)+Ny/2),Ny)-Ny/2) ^2));
-            sigblury=0.6;%/sqrt( (( mod((coord(exper,1)+Nx/2),Nx)-Nx/2))^2  +  ((  mod((coord(exper,2)+Ny/2),Ny)-Ny/2) ^2));
-             for i=1:Nx
-                for j=1:Ny
-                    hh(i,j)=exp(-(abs(i-floor(Nx/2)-1).^3.0)*sigblurx).*exp(-(abs(j-floor(Ny/2)-1).^3.0)*sigblury);
-                end
-             end
-
-            S{1}=1;
-            hh=S{1}*(hh)/sum(sum(hh));
-            HQ{exper}=fft2(fftshift(hh));
-
         end;
 
-     %x=g2(1:Nx,1:Ny);
+      x=g2(1:Nx,1:Ny);
 
-     ssigma=10^(-9)/(1);%/log(alpha+1);
-
+        ssigma=10^(-7)/(1);%/log(alpha+1);
+    
+        
      %numbers indicating by how many pixels calculation of differences goes beyond the
      %image boundary
      for exper=1:expNum
          maxX(exper)=max(abs( mod((coord(exper,1)+Nx/2),Nx)-Nx/2))+1;
          maxY(exper)=max(abs( mod((coord(exper,2)+Ny/2),Ny)-Ny/2))+1;
      end
-
-
-     maxmaxX=max(maxX);
-     maxmaxY=max(maxY);
-
-
      
-
+    maxmaxX=max(maxX);
+    maxmaxY=max(maxY);
+     
+     
 for iter=1:25
 
      ZALL=zeros(Nx,Ny);
@@ -460,10 +465,9 @@ for iter=1:25
         J=(S{1}/2+nu{exper}/2);
 
         %E1{exper}=(f-circshift(f,rw{2*exper-1})  ).^2;
-
-     %   VE{exper}=real(ifft2( fft2(x).* HQ{1} ));
-        E   =  real(  ifft2( fft2( ( x-circshift(x, rw{2*exper-1})  ).^2  + Qp+circshift(Qp, rw{2*exper-1})) .* conj(HQ{1})  ));
-        %E   =  real(  ifft2( fft2( ( x_r-circshift(x_r, rw{2*exper-1})  ).^2  +  (x_g-circshift(x_g, rw{2*exper-1})  ).^2 + (x_b-circshift(x_b, rw{2*exper-1})  ).^2 ) .* conj(HQ{exper})  ));
+      
+         E   =  real(  ifft2( fft2( ( x-circshift(x, rw{2*exper-1})  ).^2  + Qp+circshift(Qp, rw{2*exper-1})) .* conj(HQ{1})  ));
+      %  E   =  real(  ifft2( fft2( ( x_r-circshift(x_r, rw{2*exper-1})  ).^2  +  (x_g-circshift(x_g, rw{2*exper-1})  ).^2 + (x_b-circshift(x_b, rw{2*exper-1})  ).^2 ) .* conj(HQ{exper})  ));
 
         %E = (real(ifft2( fft2( ( x-circshift(x,rw{2*exper-1})  ).^2  + Qp) .*( HQ)  )));
         A  =   (nu{exper}+S{1})./(c2{exper}*E+nu{exper})   ;
@@ -471,7 +475,7 @@ for iter=1:25
         %Z{exper}  =   exp(  log(c2{exper})/2+(S{1}/2+nu{exper}/2-1)*(log(A{exper})-log(J)+psi(J))-A{exper}.*(c2{exper}*E/2+nu{exper}/2) -log(gamma(nu{exper}/2))  +   log(nu{exper}/2)*(nu{exper}/2)  );
 
 
-        Z  =   ((gamma((nu{exper}+S{1})/2)/gamma((nu{exper})/2)) *(c2{exper}/nu{exper})^0.5*(1+c2{exper}*E/nu{exper} ).^(-(nu{exper}+S{1})/2 ));%
+        Z=   ((gamma((nu{exper}+S{1})/2)/gamma((nu{exper})/2)) *(c2{exper}/nu{exper})^0.5*(1+c2{exper}*E/nu{exper} ).^(-(nu{exper}+S{1})/2 ));%
 
         %c2prev{exper}=c2{exper};
 
@@ -490,55 +494,55 @@ for iter=1:25
     %   PW{exper}=(Z{exper}+.1)/(1+.1);
        % pof{exper}=sum(sum(Z{exper}));
     %end
+% Imask3=zeros(Nx,Ny);
+% bmaxX=Nx/4+10;
+% bmaxY=Ny/4+10;
+%Imask3(Nx/2-bmaxX:Nx/2+1+bmaxX,Ny/2-bmaxY:Ny/2+1+bmaxY)=1;
+    Qp=zeros(Nx,Ny);
 
-    % Imask3=zeros(Nx,Ny);
-    % bmaxX=Nx/4+10;
-    % bmaxY=Ny/4+10;
-    %Imask3(Nx/2-bmaxX:Nx/2+1+bmaxX,Ny/2-bmaxY:Ny/2+1+bmaxY)=1;
-
-
-Qp=zeros(Nx,Ny);
-
-    g1 = myimresizeTranspose(g,Nx,Ny,Hcubic,decFactor,extras);
-    b = gpuArray2(g1);
-
+    
     for exper=1:expNum
-
         %Z{exper}=Z{exper}./ZALL;
         %Z{exper}(find(Z{exper}<0.05))=0.0;
         B=rw{2*exper} ;
         B=B./ZALL;
-        %   E   =  real(  ifft2( fft2( ( x-circshift(x, rw{2*exper-1})  ).^2  + Qp+circshift(Qp, rw{2*exper-1})) .* conj(HQ{1})  ));
-        % c2prev=sum(sum(Z{exper}))*nu{exper}/sum(sum(B{exper}.*E));
-        B=  c2{exper}  *   real(ifft2(  fft2(  B   )  .*   (  HQ{1}   )   ))  /   S{1};
-        %B{exper}=Imask3.*fftshift(ifft2(B{exper}));
-        %B{exper}=real(fft2(fftshift(B{exper})));
-        % B{exper}(B{exper}<100)=0;
+      %   E   =  real(  ifft2( fft2( ( x-circshift(x, rw{2*exper-1})  ).^2  + Qp+circshift(Qp, rw{2*exper-1})) .* conj(HQ{1})  ));
+       % c2prev=sum(sum(Z{exper}))*nu{exper}/sum(sum(B{exper}.*E));
+       B=  c2{exper}  *   real(ifft2(  fft2(  B   )  .*   ( HQ{1})   ))  /   S{1};
+       
+      %B{exper}=Imask3.*fftshift(ifft2(B{exper}));
+     % B{exper}=real(fft2(fftshift(B{exper})));
+      % B{exper}(B{exper}<100)=0;
         %[ZeroIndX(exper) ZeroIndY(exper)]=find(B{exper}<.1);
+        
         rw{2*exper}  =   gpuArray2(  ssigma*B  );
-        %  c2{exper}=c2prev;
-        % disp(sprintf('c2(%d) %f', exper, c2{exper}));
-
-        Qp=Qp+B+circshift(B,rw{2*exper-1});%real(ifft2(conj(fft2(q1)).*(fft2(B{exper}))));
-
-       % b  =   b  +   rw{2*exper}.*VE{exper}  +   circshift( rw{2*exper}.*VE{exper},  -rw{2*exper-1});
-
+        
+      %  c2{exper}=c2prev;
+      % disp(sprintf('c2(%d) %f', exper, c2{exper}));
+       Qp=Qp+B+circshift(B,rw{2*exper-1});%real(ifft2(conj(fft2(q1)).*(fft2(B{exper}))));
+               
     end
-
-
-    %Ainv=single( real(ifft2(zeros(Nx,Ny))) );
-
+    
+      
+%     Ainv=single( real(ifft2(zeros(Nx,Ny))) );
+% 
     Imask=ones(Nx,Ny);
     Imask(1:decFactor:Nx,1:decFactor:Ny)=0;
     Imask= not(Imask);
     hcubatrous=fftshift(real(ifft2( Hcubic )));
     hcubatrous=hcubatrous(extras+1:Nx+extras,extras+1:Ny+extras);
     hcubatrous=hcubatrous.*Imask;
-    %Qp=sum(sum( real(ifft2( hcubatrous ))  .*real(ifft2( conj(hcubatrous) )) ))  /    ssigma;
+   % Qp=sum(sum( real(ifft2( hcubatrous ))  .*real(ifft2( conj(hcubatrous) )) ))  /    ssigma;
     Qp= Qp+Imask*sum(sum(  hcubatrous  .*   hcubatrous))  /    ssigma;
-    %Qp=Qp.*Imask;
+%    Qp=Qp.*Imask;
+    
+    
 
     Qp=1./Qp;
+
+
+
+
 
     iw{1}=1;
     iw{2}=decFactor;
@@ -548,16 +552,20 @@ Qp=zeros(Nx,Ny);
     iw{6}=Ny;
     iw{7}=maxX;
     iw{8}=maxY;
+
     iw{9}=HDDH;
 
+    g1 = myimresizeTranspose(g,Nx,Ny,Hcubic,decFactor,extras) ;
+  
     x_prev=x;
-
-
-    %     for exper=1:expNum
-    %     rw{2*exper}=gpuArray2(padarray(rw{2*exper},[maxX(exper) maxY(exper)],'circular'));
-    %     ZeroIndX{exper} = find(gather(rw{2*exper})/ssigma>10);
-    %     %ZeroIndX(exper)=ZeroIndX(exper)+maxX(exper);
-    %     %ZeroIndY(exper)=ZeroIndY(exper)+maxY(exper);
+    b = gpuArray2(g1);
+% 
+% 
+%     for exper=1:expNum
+%   %     rw{2*exper}=gpuArray2(padarray(rw{2*exper},[maxX(exper) maxY(exper)],'circular'));
+%         ZeroIndX{exper} = find(gather(rw{2*exper})/ssigma>10);
+%         %ZeroIndX(exper)=ZeroIndX(exper)+maxX(exper);
+%         %ZeroIndY(exper)=ZeroIndY(exper)+maxY(exper);
 %     end
 %    return
 %         %iw{10}=ZeroIndX;
@@ -566,12 +574,14 @@ Qp=zeros(Nx,Ny);
   %      rw{2*exper}=gpuArray2(padarray(rw{2*exper},[maxmaxX maxmaxY],'circular'));
   %  end
     % tic;   [ x, istop, itn, Anorm, Acond, rnorm, xnorm, D_r ]=cgLanczos( @Amat_fast,x, b(:), iw, rw, 0, 0, 1000, 10^(-10)); toc
-    %tic;  x=PCconjGradients(x(:),@Amat_ultrafast,b(:),iw,rw,1./Qp(:), 1000,10^(-13));toc
+     %tic;  x=PCconjGradients(x(:),@Amat_ultrafast,b(:),iw,rw,1./Qp(:), 1000,10^(-13));toc
+     tic;  x=conjGradients(x(:),@Amat_ultrafast,b(:),iw,rw, 1000,10^(-10));toc
 
-    tic;  x=conjGradients(  x(:),   @Amat_ultrafast,  b(:),   iw,   rw,   1000,   10^(-10));  toc
     x  =   reshape(x,  Nx, Ny );
 
     % D_r=reshape(D_r,  Nx, Ny );
+
+
     %ISNR_Bayes=10*log10(norm(fcolor(20:Nx-20,20:Ny-20)-g__2(20:Nx-20,20:Ny-20),'fro')^2/(norm(fcolor(20:Nx-20,20:Ny-20,1)-x_r(20:Nx-20,20:Ny-20),'fro')^2+norm(fcolor(20:Nx-20,20:Ny-20,2)-x_g(20:Nx-20,20:Ny-20),'fro')^2+norm(fcolor(20:Nx-20,20:Ny-20,3)-x_b(20:Nx-20,20:Ny-20),'fro')^2))
 
     boundary=decFactor+1;
@@ -583,20 +593,21 @@ Qp=zeros(Nx,Ny);
     SSIMres=ssim(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1,1),gather(x(boundary:Nx-boundary+1,boundary:Ny-boundary+1)));
 
 iter
-% if norm(x-x_prev,'fro')^2/norm(x,'fro')^2<10^(-7)
-%    % imwrite(gather(x),sprintf('../../../Downloads/Set14x4_SRoutput/Urban100x%d_%3d',decFactor,imNumber),'png');
-%     imwrite(gather(x),sprintf('../../../Downloads/Urban100x2_SRoutput/Set14x%d_%03d',decFactor,imNumber),'png');
-%     return;
-% end
+%if norm(x-x_prev,'fro')^2/norm(x,'fro')^2<10^(-7)
+   % imwrite(gather(x),sprintf('../../../Downloads/Set14x4_SRoutput/Urban100x%d_%3d',decFactor,imNumber),'png');
+%    imwrite(gather(x),sprintf('../../../Downloads/Set5x2_0dot1h/Set5x%d_%03d',decFactor,imNumber),'png');
+
+%    return;
+%end
 
 end
 
-
+%imwrite(gather(x),sprintf('../../../Downloads/Set5x2_0dot1h/Set5x%d_%03d',decFactor,imNumber),'png');
  
-    
-%imwrite(gather(x),sprintf('../../../Downloads/Urban100x2_SRoutput/Set14x%d_%03d',decFactor,imNumber),'png');
 %ISNR=10*log10(  ( norm( f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)  -   g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2   )/(  norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-x(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2))
+
 %save(sprintf('file%dwithISNR%d',myinput1),'ISNR_Bayes');
-% PSNR=10*log10(  (Nx-2*(boundary-1)+1)*(Ny-2*(boundary-1)+1)  /  (   norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),   'fro'    )^2 ) )
-% SSIMres=ssim(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1,1),gather(x(boundary:Nx-boundary+1,boundary:Ny-boundary+1)));
+ %   PSNR=10*log10(  (Nx-2*(boundary-1)+1)*(Ny-2*(boundary-1)+1)  /  (   norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),   'fro'    )^2 ) )
+    
+ %       SSIMres=ssim(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1,1),gather(x(boundary:Nx-boundary+1,boundary:Ny-boundary+1)));
 

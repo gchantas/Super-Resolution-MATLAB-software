@@ -1,22 +1,21 @@
-%function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr2_1_2019(pathHR,pathLR,imNumber)
+function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr2_1_2019(pathHR,pathLR,imNumber,decFactor)
 
 
 %Changes: for all decFactors
 
 
-clear all;
-myinput1=1;
-imNumber=1;
+%clear all;
+%myinput1=1;
+%imNumber=3;
 %randn('seed',0);
 
 
 
-decFactor=2;
-boundary=decFactor;
+%decFactor=4;
 %pathHR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_train_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
 %pathLR = sprintf('/home/gchantas/Documents/SR/DIV2Kdataset/DIV2K_valid_LR_bicubic/X2/%04dx%d.png',imNumber,decFactor);
-pathHR = sprintf('..\\Urban100x1_%d\\img_%03d.png',decFactor,imNumber);
-pathLR= sprintf('..\\Urban100x%d\\img_%03d.png',decFactor,imNumber);
+%pathHR = sprintf('/home/gchantas/Documents/SR/Urban100x1_%d/img_%03d.png',decFactor,imNumber);
+%pathLR= sprintf('/home/gchantas/Documents/SR/Urban100x%d/img_%03d.png',decFactor,imNumber);
 
 %pathHR = sprintf('/home/gchantas/Downloads/Set14x1_%d/image_%03d.png',decFactor,imNumber);
 %pathLR= sprintf('/home/gchantas/Downloads/Set14x%d/image_%03d.png',decFactor,imNumber);
@@ -79,10 +78,10 @@ f=f_(1:Nx,1:Ny,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-hh1=zeros(Nx,Ny);
-sigall=1/2;
- 
+% 
+% hh1=zeros(Nx,Ny);
+% sigall=1/2;
+%  
 
 
 %Bicubic separable filter
@@ -129,12 +128,12 @@ Qp=abs(fft2(Q)).^2;
 
 
 alpha=1;
-ssigma=10^(-7);
+ssigma=10^(-6);
 
 x=g2;
 
-[x,alpha,ssigma,Inv,HDDH]=StatSR(x,g,1,ssigma,Nx,Ny,2,f);
-
+[x,alpha,ssigma,Inv,HDDH]=StatSRx4(x,g,1,ssigma,Nx,Ny,decFactor,f);
+alpha
 
 %x(30:Nx-30,30:Ny-30)=(xprev(30:Nx-30,30:Ny-30));
 
@@ -182,9 +181,9 @@ sigall=1/decFactor;
     for i=round(Nx/2)-12:round(Nx/2)+13
 
         for j=round(Ny/2)-12:round(Ny/2)+13
-          %  hh1(i,j)=sigblurx*cubic(-(i-Nx/2+1/4)*sigblurx-1/16)*sigblury*cubic(-(j-Ny/2+1/4)*sigblury-1/16);
+           hh1(i,j)=sigblurx*cubic(-(i-Nx/2+1/4)*sigblurx-1/16)*sigblury*cubic(-(j-Ny/2+1/4)*sigblury-1/16);
            %For decFactor=2
-          hh1(i,j)=sigblurx*cubic(-(i-Nx/2-1+0.5)*sigblurx)*sigblury*cubic(-(j-Ny/2-1+0.5)*sigblury);
+          % hh1(i,j)=sigblurx*cubic(-(i-Nx/2-1+0.5)*sigblurx)*sigblury*cubic(-(j-Ny/2-1+0.5)*sigblury);
         end
 
     end
@@ -201,7 +200,8 @@ Ny=Ny-2*extras;
    
 %ISNR_Bayes=10*log10( norm(f(20:Nx-20,20:Ny-20)  - (g2(20:Nx-20,20:Ny-20)),'fro')^2/norm( f(20:Nx-20,20:Ny-20) - x1(20:Nx-20,20:Ny-20),'fro')^2  )
 
-%norm(myimresize(f,Nx,Ny,Hcubic,decFactor,[extras extras])-imresize(f,1/decFactor),'fro')^2/(Nx*Ny)
+norm(myimresize(f,Nx,Ny,Hcubic,decFactor,extras )-imresize(f,1/decFactor),'fro')^2/(Nx*Ny)
+
 
 
 
@@ -214,8 +214,8 @@ optcoord=zeros(Nx,Ny);
 optcoord(Nx/2+1,Ny/2+1)=1;
 
             for exper=1:expNum
-                nu{exper}=7.0001;
-                c2{exper}=4000*alpha;
+                nu{exper}=2.0001;
+                c2{exper}=1000*alpha;
                 Z{exper}=ones(Nx,Ny)/expNum;
                 A{exper}=zeros(Nx,Ny)/expNum;
                 pof{exper}=1/expNum;
@@ -588,14 +588,15 @@ for iter=1:25
 
 iter
 if norm(x-x_prev,'fro')^2/norm(x,'fro')^2<10^(-6)
-  %  imwrite(gather(x),sprintf('../Urban100x4_SRoutput/Urban100x%d_%3d',decFactor,imNumber),'png');
+   % imwrite(gather(x),sprintf('../../../Downloads/Set14x4_SRoutput/Urban100x%d_%3d',decFactor,imNumber),'png');
+    imwrite(gather(x),sprintf('../../../Downloads/Set14x4_SRoutput/Set5x%d_%03d',decFactor,imNumber),'png');
 
     return;
 end
 
 end
 
-%imwrite(gather(x),sprintf('../Urban100x4_SRoutput/Urban100x%d_%3d',decFactor,imNumber),'png');
+imwrite(gather(x),sprintf('../../../Downloads/Set14x4_SRoutput/Set5x%d_%03d',decFactor,imNumber),'png');
  
 %ISNR=10*log10(  ( norm( f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)  -   g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2   )/(  norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-x(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2))
 

@@ -1,4 +1,4 @@
-function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor)
+function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathSR,pathLR,imNumber,decFactor)
 
 %Changes: for all decFactors!!!!!!!!!!!!! done
 
@@ -301,7 +301,7 @@ tic;[fcorrsorted,I]=sort(fcorr(:),'descend');toc
 expNum=1;
 indx=0;
 
-for j1=1:1:80
+for j1=1:1:280
 
     indx=j1;
 
@@ -318,9 +318,7 @@ for j1=1:1:80
        [ mod(k1(indx)-Nx/2-1,Nx), mod(l1(indx)-Ny/2-1,Ny)]
     end
     
-    if  fcorr(k1(indx),l1(indx))<fcorrMax*0.60
-        break;
-    end
+
 
 end
 
@@ -570,7 +568,7 @@ for iter=1:25
   %  end
     % tic;   [ x, istop, itn, Anorm, Acond, rnorm, xnorm, D_r ]=cgLanczos( @Amat_fast,x, b(:), iw, rw, 0, 0, 1000, 10^(-10)); toc
      %tic;  x=PCconjGradients(x(:),@Amat_ultrafast,b(:),iw,rw,1./Qp(:), 1000,10^(-13));toc
-     tic;  x=conjGradients(x(:),@Amat_ultrafast,b(:),iw,rw, 1000,10^(-10));toc
+     tic;  x=conjGradients(x(:),@Amat_ultrafast,b(:),iw,rw, 1000,10^(-12));toc
 
     x  =   reshape(x,  Nx, Ny );
 
@@ -597,7 +595,7 @@ end
 
 end
 
-imwrite(gather(x),sprintf('/home/gchantas/Documents/PIRM2018/Validation/4x_downsampledYCbCrSRAugust2019/x4_%d.png',imNumber),'png');
+imwrite(gather(x),pathSR);
  
 %ISNR=10*log10(  ( norm( f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)  -   g2(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2   )/(  norm(f(boundary:Nx-boundary+1,boundary:Ny-boundary+1)-x(boundary:Nx-boundary+1,boundary:Ny-boundary+1),'fro')^2))
 

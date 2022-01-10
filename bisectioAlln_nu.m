@@ -3,7 +3,7 @@ function nu=bisection_nu(nu,uplimit,mysumA,NN,S)
 nuprev=nu;
 
 up=uplimit;
-down=2.1;
+down=4.1;
 
 %mysumA=sum(sum( Z.*log(A./Z) ))-sum(sum(A))+ sum(sum( Z*(psi((nu2+S)/2)-log((nu+S)/2)) - 2*(1-Z)/(nu+S)  ));
 %mysumA=sum(sum( Z.*log(A) - Z.*A ))/sum(sum(Z))   +  psi((nuprev+S)/2) -  log((nuprev+S)/2) +1  ;

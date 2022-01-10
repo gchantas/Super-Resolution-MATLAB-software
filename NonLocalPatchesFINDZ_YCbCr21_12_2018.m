@@ -452,7 +452,7 @@ clear E;
     maxmaxX=max(maxX);
     maxmaxY=max(maxY);
      
-     
+
 for iter=1:10
 
      ZALL=zeros(Nx,Ny);
@@ -470,7 +470,6 @@ for iter=1:10
         A  =   (nu{exper}+S{1})./(c2{exper}*E+nu{exper})   ;
         %Z{exper}  =   exp(  J*log(A{exper})-A{exper}.*(c2{exper}*E/2+nu{exper}/2)   );
         %Z{exper}  =   exp(  log(c2{exper})/2+(S{1}/2+nu{exper}/2-1)*(log(A{exper})-log(J)+psi(J))-A{exper}.*(c2{exper}*E/2+nu{exper}/2) -log(gamma(nu{exper}/2))  +   log(nu{exper}/2)*(nu{exper}/2)  );
-
 
         Z {exper} =   ((gamma((nu{exper}+S{1})/2)/gamma((nu{exper})/2)) *(c2{exper}/nu{exper})^0.5*(1+c2{exper}*E/nu{exper} ).^(-(nu{exper}+S{1})/2 ));%
 

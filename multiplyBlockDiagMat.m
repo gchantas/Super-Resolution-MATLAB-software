@@ -2,7 +2,6 @@ function C=multiplyBlockDiagMat(A,B,decFac)
 
 if decFac==1
 
-
     C=A.*B;
 
 

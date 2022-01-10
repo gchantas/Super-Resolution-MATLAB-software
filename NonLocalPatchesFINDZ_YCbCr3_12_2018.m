@@ -1,4 +1,4 @@
-function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr28_11_2018(pathHR,pathLR)
+ function [PSNR, ISNR, SSIMres]=NonLocalPatchesFINDZ_YCbCr28_11_2018(pathHR,pathLR)
 %clear all;
 %myinput1=1;
 %imNumber=4;
