@@ -1,4 +1,4 @@
-function [PSNR, ISNR, SSIMres]=SRviaDenoisingYCbCx3Gauss_26_1_2020(pathHR,pathLR,decFactor)
+function [PSNR, ISNR, SSIMres]=SRviaDenoisingYCbCx3Gauss_26_1_2020(pathHR,pathLR)
 
 
 %Changes: for 3x decFactors
