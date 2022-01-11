@@ -19,7 +19,7 @@ You could also find them via a Google search. The datasets are "Set3", "Set14" a
 
 _Note 2_: The image(s) to be fed to the SR MATLAB functions must be gray-scale (the Y channel of YCbCr).So, it would be convenient to transform the colored images to YCbCr and provide the Y channel. You may find the existing function makeColored.m useful to this end, which makes that tranformation of all images in a directory and saves to another.
 
-_Note 3_: **gpuArray2** is the function loadin an array to the GPU. If you don't have one, or, for various reasons you want to run the code on CPU, uncomment the one and only existing line in that file.
+_Note 3_: **gpuArray2** is the function loading an array to the GPU. If, for various reasons, you want to run the code on CPU, uncomment the one and single line in that file.
 
 **1.** NonLocalPatchesFINDZ_YCbCr1_9_2019(pathHR,pathLR,imNumber,decFactor)
 
