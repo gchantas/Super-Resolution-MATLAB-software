@@ -17,7 +17,7 @@ decFactor: the scaling factor which can be either 2 or 4. For decFactor=3 cases,
 _Note 1_: **The images are not included.** Instead, you must download them from their respective repositories. See the paper to find the links.
 You could also find them via a Google search. The datasets are "Set3", "Set14" and "Urban100".
 
-_Note 2_: the image to be fed to the SR MATLAB functions must be grayescale, so, it would be convenient to make it as such. You may find the existing function makeColored.m useful to this end.
+_Note 2_: The image(s) to be fed to the SR MATLAB functions must be gray-scale (the Y channel of YCbCr).So, it would be convenient to transform the colored images to YCbCr and provide the Y channel. You may find the existing function makeColored.m useful to this end, which makes that tranformation of all images in a directory and saves to another.
 
 _Note 3_: **gpuArray2** is the function loadin an array to the GPU. If you don't have one, or, for various reasons you want to run the code on CPU, uncomment the one and only existing line in that file.
 
